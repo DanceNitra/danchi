@@ -47,6 +47,13 @@
     padding:10px 16px;cursor:pointer;transition:color .2s,border-color .2s}
   #soundBtn.on{color:var(--amber);border-color:var(--amber)}
   #soundBtn:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  @keyframes attractPulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(255,180,84,.55);border-color:var(--amber)}
+    50%{box-shadow:0 0 22px 6px rgba(255,180,84,.28);border-color:var(--amber)}
+  }
+  #soundBtn.attract{color:var(--amber);border-color:var(--amber);animation:attractPulse 1.6s ease-in-out infinite}
+  @media (prefers-reduced-motion: reduce){#soundBtn.attract{animation:none;box-shadow:0 0 14px 3px rgba(255,180,84,.3)}}
+
   #nowPlaying{position:fixed;left:16px;bottom:16px;z-index:3;font-family:'IBM Plex Mono',monospace;font-size:10.5px;
     letter-spacing:.16em;color:var(--amber);opacity:0;transition:opacity .4s;pointer-events:none;text-transform:uppercase;
     background:rgba(20,23,31,.85);padding:8px 12px;border-left:2px solid var(--amber)}
@@ -80,7 +87,7 @@
   </section>
   <footer><span>Danchi</span><span><span class="dot">&#9679;</span>&nbsp;the light is still on</span></footer>
 </main>
-  <button id="soundBtn" aria-pressed="false">SOUND OFF</button>
+  <button id="soundBtn" class="attract" aria-pressed="false">&#9654; TAP FOR SOUND</button>
   <div id="nowPlaying" aria-live="polite"></div>
 
 <script>
@@ -146,14 +153,15 @@
     if(!p || !soundOn){ nextSingAt = performance.now() + 9000; return; }
     const a = new Audio(p.url);
     a.volume = 0; audio = a;
+    a.currentTime = 3;
     a.play().then(()=>{
       clearInterval(fadeTimer);
       fadeTimer = setInterval(()=>{ if(audio!==a){clearInterval(fadeTimer);return;} a.volume=Math.min(0.85,a.volume+0.09); },60);
       np.textContent = '\u25B6 ' + p.full;
       np.classList.add('show');
-      setTimeout(()=>{ if(audio===a){ stopAudio(false); if(singer && singer.idx===gi) singer.dir=-1; } }, 7000);
+      setTimeout(()=>{ if(audio===a){ stopAudio(false); if(singer && singer.idx===gi) singer.dir=-1; } }, 15000);
     }).catch(()=>{});
-    nextSingAt = performance.now() + 11000;   // 7s song + fade + pause
+    nextSingAt = performance.now() + 19000;   // 15s song + fade + quiet pause
   }
 
   // ---------- layout ----------
@@ -234,6 +242,7 @@
 
   // ---------- interaction ----------
   btn.addEventListener('click', ()=>{
+    btn.classList.remove('attract');
     soundOn=!soundOn;
     btn.classList.toggle('on',soundOn);
     btn.setAttribute('aria-pressed',soundOn);
