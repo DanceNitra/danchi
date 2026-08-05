@@ -17,7 +17,7 @@
   body{background:var(--dusk);color:var(--ink);font-family:'Archivo',sans-serif;line-height:1.5;min-height:100vh;overflow-x:hidden}
   #facade{position:fixed;inset:0;z-index:0;width:100%;height:100%}
   .veil{position:fixed;inset:0;z-index:1;pointer-events:none;
-    background:rgba(20,23,31,.55)}
+    background:rgba(20,23,31,.42)}
   .page{position:relative;z-index:2;max-width:430px;margin:0 auto;padding:64px 22px 48px}
   .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
   h1{font-variation-settings:'wdth' 122;font-weight:900;font-size:clamp(48px,14vw,76px);line-height:.9;text-transform:uppercase;text-shadow:0 2px 14px rgba(13,15,22,.85)}
@@ -27,7 +27,7 @@
   .count b{color:var(--amber);font-weight:500}
   .links{margin-top:40px;display:grid;gap:10px}
   .win{position:relative;display:flex;align-items:center;justify-content:space-between;gap:14px;
-    padding:17px 18px 17px 20px;background:rgba(24,28,37,.68);border:1px solid var(--line);
+    padding:17px 18px 17px 20px;background:rgba(24,28,37,.62);border:1px solid var(--line);
     text-decoration:none;color:var(--ink);transition:background .25s,border-color .25s,transform .15s;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);text-shadow:0 1px 6px rgba(13,15,22,.8)}
   .win::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--line);transition:background .25s,box-shadow .25s}
   .win:hover,.win:focus-visible{background:rgba(35,40,55,.88);border-color:#3A4152;transform:translateX(2px);outline:none}
@@ -212,7 +212,7 @@
     const dpr = Math.min(window.devicePixelRatio||1, 2);
     canvas.width = innerWidth*dpr; canvas.height = innerHeight*dpr;
     ctx.setTransform(dpr,0,0,dpr,0,0);
-    cell = innerWidth < 600 ? 78 : 96;
+    cell = innerWidth < 600 ? 62 : 96;
     cols = Math.ceil(innerWidth/cell); rows = Math.ceil(innerHeight/cell);
     order = shuffle([...Array(cols*rows)].map((_,i)=>i%N));
     seedAmbient(); draw();
@@ -223,7 +223,7 @@
   }
   function seedAmbient(){
     lights = [];
-    const n = Math.max(3, Math.round(cols*rows*0.012));
+    const n = Math.max(7, Math.round(cols*rows*0.030));
     for(let i=0;i<n;i++) lights.push(newAmbient(true));
   }
 
@@ -254,7 +254,7 @@
   }
   function draw(){
     ctx.fillStyle='#0d0f16'; ctx.fillRect(0,0,innerWidth,innerHeight);
-    const DIM=0.10;
+    const DIM=0.17;
     for(let gi=0;gi<cols*rows;gi++) drawTile(gi,DIM);
     // ambient: modest brightness, small glow, NO sound
     for(const L of lights){ glow(L.idx,L.a,cell*1.6,0.32); drawTile(L.idx,DIM+0.72*L.a); }
