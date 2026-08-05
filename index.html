@@ -215,9 +215,21 @@
     canvas.width = innerWidth*dpr; canvas.height = innerHeight*dpr;
     ctx.setTransform(dpr,0,0,dpr,0,0);
     cell = innerWidth < 600 ? 62 : 96;
-    cols = Math.ceil(innerWidth/cell); rows = Math.ceil(innerHeight/cell);
-    order = shuffle([...Array(cols*rows)].map((_,i)=>i%N));
-    seedAmbient(); draw();
+    const newCols = Math.ceil(innerWidth/cell), newRows = Math.ceil(innerHeight/cell);
+    if(newCols !== cols || order.length === 0){
+      // real layout change (rotation / width) -> rebuild facade
+      cols = newCols; rows = newRows;
+      order = shuffle([...Array(cols*rows)].map((_,i)=>i%N));
+      seedAmbient();
+      if(singer && singer.idx >= cols*rows) singer = null;
+    } else {
+      // height-only change (mobile URL bar) -> keep mapping, just extend if needed
+      rows = newRows;
+      while(order.length < cols*rows) order.push(order.length % N);
+      lights = lights.filter(L=>L.idx < cols*rows);
+      if(singer && singer.idx >= cols*rows) singer.dir = -1;
+    }
+    draw();
   }
   function newAmbient(mature){
     return {idx: Math.floor(Math.random()*cols*rows), a: mature?Math.random()*0.5:0, dir:1,
@@ -252,8 +264,13 @@
   }
   function frame(gi, a){
     const [x,y]=tileXY(gi);
-    ctx.strokeStyle='rgba(255,200,120,'+(0.9*a).toFixed(3)+')';
+    ctx.save();
+    ctx.shadowColor='rgba(255,190,100,'+(0.95*a).toFixed(3)+')';
+    ctx.shadowBlur=10;
+    ctx.strokeStyle='rgba(255,225,170,'+(1.0*a).toFixed(3)+')';
     ctx.lineWidth=1.5; ctx.strokeRect(x+0.5,y+0.5,cell-3,cell-3);
+    ctx.strokeRect(x+0.5,y+0.5,cell-3,cell-3);
+    ctx.restore();
   }
   function draw(){
     ctx.fillStyle='#0d0f16'; ctx.fillRect(0,0,innerWidth,innerHeight);
@@ -264,7 +281,7 @@
     // singer: dominant — big pulsing glow, full brightness, bright frame
     if(singer){
       const pulse = 1 + 0.15*Math.sin((performance.now()-singer.t0)/280);
-      glow(singer.idx, singer.a*pulse, cell*4.2, 0.55);
+      glow(singer.idx, singer.a*pulse, cell*2.1, 0.34);
       drawTile(singer.idx, DIM + 0.90*singer.a);
       frame(singer.idx, singer.a);
     }
@@ -280,12 +297,24 @@
       else{ singer.a-=0.02; if(singer.a<=0) singer=null; }
     }
     if(soundOn && !singer && now>nextSingAt){
-      sing(Math.floor(Math.random()*cols*rows));
+      sing(pickVisibleTile());
     }
     draw();
     requestAnimationFrame(tick);
   }
 
+  const pageEl = document.querySelector('.page');
+  function pickVisibleTile(){
+    const r = pageEl.getBoundingClientRect();
+    for(let i=0;i<50;i++){
+      const gi = Math.floor(Math.random()*cols*rows);
+      const cx = (gi%cols)*cell + cell/2, cy = Math.floor(gi/cols)*cell + cell/2;
+      if(cy<0 || cy>innerHeight) continue;
+      const insideContent = cx > r.left-6 && cx < r.right+6 && cy > r.top-6 && cy < r.bottom+6;
+      if(!insideContent) return gi;
+    }
+    return Math.floor(Math.random()*cols*rows);
+  }
   // ---------- interaction ----------
   btn.addEventListener('click', ()=>{
     btn.classList.remove('attract');
