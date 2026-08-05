@@ -20,17 +20,17 @@
     background:rgba(20,23,31,.55)}
   .page{position:relative;z-index:2;max-width:430px;margin:0 auto;padding:64px 22px 48px}
   .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
-  h1{font-variation-settings:'wdth' 122;font-weight:900;font-size:clamp(56px,17vw,76px);line-height:.9;text-transform:uppercase}
-  .tagline{margin-top:14px;font-size:15.5px;font-weight:300;color:var(--fog);max-width:32ch}
+  h1{font-variation-settings:'wdth' 122;font-weight:900;font-size:clamp(48px,14vw,76px);line-height:.9;text-transform:uppercase;text-shadow:0 2px 14px rgba(13,15,22,.85)}
+  .tagline{margin-top:14px;font-size:15.5px;font-weight:300;color:#c9ccd6;max-width:32ch;text-shadow:0 1px 8px rgba(13,15,22,.9)}
   .tagline em{font-style:normal;color:var(--ink)}
   .count{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--fog);margin-top:10px;text-transform:uppercase}
   .count b{color:var(--amber);font-weight:500}
   .links{margin-top:40px;display:grid;gap:10px}
   .win{position:relative;display:flex;align-items:center;justify-content:space-between;gap:14px;
-    padding:17px 18px 17px 20px;background:rgba(28,32,41,.92);border:1px solid var(--line);
-    text-decoration:none;color:var(--ink);transition:background .25s,border-color .25s,transform .15s;backdrop-filter:blur(2px)}
+    padding:17px 18px 17px 20px;background:rgba(24,28,37,.68);border:1px solid var(--line);
+    text-decoration:none;color:var(--ink);transition:background .25s,border-color .25s,transform .15s;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);text-shadow:0 1px 6px rgba(13,15,22,.8)}
   .win::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--line);transition:background .25s,box-shadow .25s}
-  .win:hover,.win:focus-visible{background:rgba(35,40,55,.95);border-color:#3A4152;transform:translateX(2px);outline:none}
+  .win:hover,.win:focus-visible{background:rgba(35,40,55,.88);border-color:#3A4152;transform:translateX(2px);outline:none}
   .win:hover::before,.win:focus-visible::before{background:var(--amber);box-shadow:0 0 18px rgba(255,180,84,.5)}
   .w-name{font-weight:600;font-size:16px}
   .w-hint{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--fog);transition:color .25s}
@@ -38,7 +38,7 @@
   .player{margin-top:48px}
   .p-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--fog);display:flex;align-items:center;gap:12px;margin-bottom:16px}
   .p-label::after{content:"";flex:1;height:1px;background:var(--line)}
-  .p-frame{border:1px solid var(--line);background:rgba(28,32,41,.92);padding:6px}
+  .p-frame{border:1px solid var(--line);background:rgba(24,28,37,.68);padding:6px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
   .p-frame iframe{display:block;width:100%;border:0;border-radius:12px}
   footer{margin-top:52px;display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7c8090}
   footer .dot{color:var(--amber)}
@@ -62,6 +62,15 @@
     background:rgba(20,23,31,.85);padding:8px 12px;border-left:2px solid var(--amber)}
   #nowPlaying.show{opacity:1}
   #facade{cursor:pointer}
+  @media (max-width:600px){
+    .page{padding:52px 18px 40px;max-width:390px}
+    .tagline{font-size:14px;max-width:30ch}
+    .links{margin-top:30px;gap:8px}
+    .win{padding:13px 15px 13px 17px}
+    .w-name{font-size:15px}
+    .player{margin-top:36px}
+    footer{margin-top:40px}
+  }
   @media (prefers-reduced-motion: reduce){.win,.win::before,.w-hint{transition:none}}
 </style>
 </head>
@@ -110,7 +119,7 @@
   const img = new Image();
 
   let cols, rows, cell, order = [], lights = [];
-  let soundOn = false, audio = null, fadeTimer = null;
+  let soundOn = false, fadeTimer = null;
   let singer = null;              // {idx, a, dir, pulse}
   let nextSingAt = 0;
   const previews = {};
@@ -144,33 +153,59 @@
     return null;
   }
 
-  // ---------- audio ----------
+  // ---------- audio: single persistent player (iOS-safe) ----------
+  const player = new Audio();
+  player.preload = 'auto';
+  let unlocked = false, canFade = true, playToken = 0, singGi = -1;
+  const SILENCE = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
+
+  function unlockAudio(){
+    if(unlocked) return;
+    player.src = SILENCE;
+    player.play().then(()=>{ player.pause(); unlocked = true; }).catch(()=>{});
+    // detect whether volume is scriptable (iPhone: it is not)
+    try { player.volume = 0.5; canFade = (player.volume < 0.9); player.volume = 1; } catch(e){ canFade = false; }
+  }
   function stopAudio(fast){
     clearInterval(fadeTimer);
-    if(!audio) return;
-    const a = audio; audio = null;
-    if(fast){ a.pause(); }
-    else { const f = setInterval(()=>{ a.volume=Math.max(0,a.volume-0.028); if(a.volume<=0){a.pause();clearInterval(f);} },60); }
+    playToken++;
     np.classList.remove('show');
+    if(player.paused) return;
+    if(fast || !canFade){ player.pause(); return; }
+    const tk = playToken;
+    fadeTimer = setInterval(()=>{
+      if(playToken!==tk){ clearInterval(fadeTimer); return; }
+      player.volume = Math.max(0, player.volume - 0.028);
+      if(player.volume<=0){ player.pause(); clearInterval(fadeTimer); }
+    },60);
   }
   function sing(gi){
     const p = previewFor(order[gi]);
     stopAudio(true);
     singer = {idx: gi, a: 0, dir: 1, t0: performance.now()};
     if(!p || !soundOn){ setTimeout(()=>{ if(singer && singer.idx===gi) singer.dir=-1; }, 4000); nextSingAt = performance.now() + 5000; return; }
-    const a = new Audio(p.url);
-    a.volume = 0; audio = a;
-    a.currentTime = 3;
-    a.addEventListener('ended', ()=>{ if(audio===a){ stopAudio(true); if(singer && singer.idx===gi) singer.dir=-1; nextSingAt = performance.now() + 1000; } });
-    a.play().then(()=>{
-      clearInterval(fadeTimer);
-      fadeTimer = setInterval(()=>{ if(audio!==a){clearInterval(fadeTimer);return;} a.volume=Math.min(0.85,a.volume+0.09); },60);
+    const tk = ++playToken; singGi = gi;
+    player.src = p.url;
+    player.volume = canFade ? 0 : 1;
+    const onMeta = ()=>{ player.removeEventListener('loadedmetadata', onMeta); try{ player.currentTime = 3; }catch(e){} };
+    player.addEventListener('loadedmetadata', onMeta);
+    player.play().then(()=>{
+      if(playToken!==tk) return;
+      if(canFade){
+        clearInterval(fadeTimer);
+        fadeTimer = setInterval(()=>{ if(playToken!==tk){clearInterval(fadeTimer);return;} player.volume = Math.min(0.85, player.volume + 0.09); },60);
+      }
       np.textContent = '\u25B6 ' + p.full;
       np.classList.add('show');
-      setTimeout(()=>{ if(audio===a){ stopAudio(false); if(singer && singer.idx===gi) singer.dir=-1; } }, 13500);
+      setTimeout(()=>{ if(playToken===tk){ stopAudio(false); if(singer && singer.idx===gi) singer.dir=-1; } }, 13500);
     }).catch(()=>{});
     nextSingAt = performance.now() + 16000;   // 13.5s play + 1.5s fade + 1s gap
   }
+  player.addEventListener('ended', ()=>{
+    np.classList.remove('show');
+    if(singer && singer.idx===singGi) singer.dir=-1;
+    nextSingAt = Math.min(nextSingAt, performance.now() + 1000);
+  });
 
   // ---------- layout ----------
   function resize(){
@@ -251,6 +286,7 @@
   // ---------- interaction ----------
   btn.addEventListener('click', ()=>{
     btn.classList.remove('attract');
+    unlockAudio();
     soundOn=!soundOn;
     btn.classList.toggle('on',soundOn);
     btn.setAttribute('aria-pressed',soundOn);
@@ -269,7 +305,7 @@
   canvas.addEventListener('click',(e)=>{
     const gi = Math.floor(e.clientX/cell)+Math.floor(e.clientY/cell)*cols;
     if(gi<0||gi>=cols*rows) return;
-    if(singer && audio) { if(singer.idx===gi) return; }
+    if(singer && !player.paused && singer.idx===gi) return;
     if(singer) singer.dir=-1;
     sing(gi);
   });
