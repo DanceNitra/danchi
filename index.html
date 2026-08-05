@@ -143,7 +143,7 @@
     if(!audio) return;
     const a = audio; audio = null;
     if(fast){ a.pause(); }
-    else { const f = setInterval(()=>{ a.volume=Math.max(0,a.volume-0.08); if(a.volume<=0){a.pause();clearInterval(f);} },60); }
+    else { const f = setInterval(()=>{ a.volume=Math.max(0,a.volume-0.028); if(a.volume<=0){a.pause();clearInterval(f);} },60); }
     np.classList.remove('show');
   }
   function sing(gi){
@@ -159,9 +159,9 @@
       fadeTimer = setInterval(()=>{ if(audio!==a){clearInterval(fadeTimer);return;} a.volume=Math.min(0.85,a.volume+0.09); },60);
       np.textContent = '\u25B6 ' + p.full;
       np.classList.add('show');
-      setTimeout(()=>{ if(audio===a){ stopAudio(false); if(singer && singer.idx===gi) singer.dir=-1; } }, 15000);
+      setTimeout(()=>{ if(audio===a){ stopAudio(false); if(singer && singer.idx===gi) singer.dir=-1; } }, 13500);
     }).catch(()=>{});
-    nextSingAt = performance.now() + 19000;   // 15s song + fade + quiet pause
+    nextSingAt = performance.now() + 15500;   // 13.5s play + 1.5s fade + 0.5s gap
   }
 
   // ---------- layout ----------
