@@ -298,7 +298,10 @@
     ctx.shadowColor='rgba(255,190,100,'+(0.95*a).toFixed(3)+')';
     ctx.shadowBlur=10;
     ctx.strokeStyle='rgba(255,225,170,'+(1.0*a).toFixed(3)+')';
-    ctx.lineWidth=1.5; ctx.strokeRect(x+0.5,y+0.5,cell-3,cell-3);
+    ctx.lineWidth=1.5;
+    ctx.setLineDash([9,6]);
+    ctx.lineDashOffset = -(performance.now()/40) % 15;   // dashes travel clockwise
+    ctx.strokeRect(x+0.5,y+0.5,cell-3,cell-3);
     ctx.strokeRect(x+0.5,y+0.5,cell-3,cell-3);
     ctx.restore();
   }
