@@ -214,7 +214,7 @@
     const DIM=0.10;
     for(let gi=0;gi<cols*rows;gi++) drawTile(gi,DIM);
     // ambient: modest brightness, small glow, NO sound
-    for(const L of lights){ glow(L.idx,L.a,cell*1.6,0.22); drawTile(L.idx,DIM+0.55*L.a); }
+    for(const L of lights){ glow(L.idx,L.a,cell*1.6,0.28); drawTile(L.idx,DIM+0.62*L.a); }
     // singer: dominant — big pulsing glow, full brightness, bright frame
     if(singer){
       const pulse = 1 + 0.15*Math.sin((performance.now()-singer.t0)/280);
@@ -226,7 +226,7 @@
   function tick(now){
     for(let i=0;i<lights.length;i++){
       const L=lights[i];
-      if(L.dir===1){L.a+=L.speed; if(L.a>=0.55){L.a=0.55; if(--L.hold<=0)L.dir=-1;}}
+      if(L.dir===1){L.a+=L.speed; if(L.a>=0.70){L.a=0.70; if(--L.hold<=0)L.dir=-1;}}
       else{L.a-=L.speed; if(L.a<=0) lights[i]=newAmbient(false);}
     }
     if(singer){
