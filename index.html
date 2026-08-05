@@ -161,7 +161,7 @@
       np.classList.add('show');
       setTimeout(()=>{ if(audio===a){ stopAudio(false); if(singer && singer.idx===gi) singer.dir=-1; } }, 13500);
     }).catch(()=>{});
-    nextSingAt = performance.now() + 15500;   // 13.5s play + 1.5s fade + 0.5s gap
+    nextSingAt = performance.now() + 16000;   // 13.5s play + 1.5s fade + 1s gap
   }
 
   // ---------- layout ----------
