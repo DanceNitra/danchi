@@ -69,6 +69,7 @@ a{color:var(--ink)}
 .brand{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--amber);text-decoration:none}
 .top nav a{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--fog);text-decoration:none;margin-left:20px}
 .top nav a:hover{color:var(--ink)}
+@media(max-width:760px){.top{margin-bottom:28px}.top nav a{margin-left:14px}.top nav a.x{display:none}.page{padding:22px 16px 32px}.count{line-height:1.9}}
 .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--amber);margin:0 0 14px}
 h1{font-variation-settings:'wdth' 122;font-weight:900;font-size:clamp(40px,9vw,76px);line-height:.9;text-transform:uppercase;margin:0;text-shadow:0 2px 14px rgba(13,15,22,.85)}
 .count{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--fog);margin-top:12px;text-transform:uppercase}.count b{color:var(--amber);font-weight:500}
@@ -107,7 +108,7 @@ def head(title, desc, url, image, ld, facade):
 <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>
 <style>{CSS}</style></head><body>
 <div class="facade" aria-hidden="true">{facade}</div><div class="veil"></div>
-<div class="page"><div class="top"><a class="brand" href="{SITE}/">Danchi</a><nav><a href="{SITE}/releases/">Releases</a><a href="{ARTIST['spotify']}">Spotify</a><a href="{ARTIST['apple']}">Apple Music</a><a href="{ARTIST['youtube']}">YouTube</a></nav></div>"""
+<div class="page"><div class="top"><a class="brand" href="{SITE}/">Danchi</a><nav><a href="{SITE}/releases/">Releases</a><a class="x" href="{ARTIST['spotify']}">Spotify</a><a class="x" href="{ARTIST['apple']}">Apple Music</a><a class="x" href="{ARTIST['youtube']}">YouTube</a></nav></div>"""
 
 FOOT = f"""<footer><span><a href="{SITE}/">Danchi</a> · <a href="{ARTIST['instagram']}">Instagram</a> · <a href="{ARTIST['tiktok']}">TikTok</a></span><span><span class="dot">&#9679;</span>&nbsp;the light is still on</span></footer></div></body></html>"""
 
