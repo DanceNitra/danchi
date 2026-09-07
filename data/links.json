@@ -1,4 +1,37 @@
 {
   "_readme": "Exact per-track links. Add an entry when you copy a Spotify or YouTube link anyway (e.g. on release day), then run: python build_releases.py. Anything missing falls back to a search that lands on the track.",
-  "_example": {"spotify": "https://open.spotify.com/track/XXXXXXXXXXXXXXXXXXXXXX", "youtube": "https://youtu.be/XXXXXXXXXXX"}
+  "_example": {
+    "spotify": "https://open.spotify.com/track/XXXXXXXXXXXXXXXXXXXXXX",
+    "youtube": "https://youtu.be/XXXXXXXXXXX"
+  },
+  "crescendo-at-dusk": {
+    "spotify": "https://open.spotify.com/album/6pkGAnlmFFWPSGZ0NUjoD1"
+  },
+  "out-of-the-ashes": {
+    "spotify": "https://open.spotify.com/album/2WXP8ckU8PNWd2qusaeYB0"
+  },
+  "beautiful-blues": {
+    "spotify": "https://open.spotify.com/album/0MVMeBsoYSALbyHMX9YlBz"
+  },
+  "sunset-groove": {
+    "spotify": "https://open.spotify.com/album/1kOwvs7PIK7IUs79GuijL1"
+  },
+  "let-the-music": {
+    "spotify": "https://open.spotify.com/album/3oBwcXcDIacbLoFpZGuVXP"
+  },
+  "neon-frenzy": {
+    "spotify": "https://open.spotify.com/album/0YDGwvjVpQHaoyaA81P3NG"
+  },
+  "through-the-storm": {
+    "spotify": "https://open.spotify.com/album/5210WRvZNL9IT35xE0jQWU"
+  },
+  "cesta-domov": {
+    "spotify": "https://open.spotify.com/album/1HEqNO0xpZ07RnEv351Dao"
+  },
+  "unstoppable": {
+    "spotify": "https://open.spotify.com/album/1nF3skN6V159zZtzyFkGgP"
+  },
+  "can-you-find-me-now": {
+    "spotify": "https://open.spotify.com/album/13uFUpLHdRo4TtxQS4T7fH"
+  }
 }
