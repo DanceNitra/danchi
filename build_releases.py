@@ -181,4 +181,11 @@ sm += [f"<url><loc>{u}</loc><lastmod>{d}</lastmod><priority>0.7</priority></url>
 sm.append("</urlset>")
 open(os.path.join(ROOT, "sitemap.xml"), "w").write("\n".join(sm) + "\n")
 open(os.path.join(ROOT, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n")
+# keep index.html's Releases button count in sync (only that number)
+idx = os.path.join(ROOT, "index.html")
+if os.path.exists(idx):
+    h = open(idx).read()
+    h2 = re.sub(r'(<a class="win releases" href="releases/"><span class="w-name"><b>)\d+(</b>)', r"\g<1>%d\g<2>" % len(songs), h)
+    if h2 != h: open(idx, "w").write(h2); print("index.html: release count updated")
+
 print(f"built {len(songs)} release pages + index + sitemap")

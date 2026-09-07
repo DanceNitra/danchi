@@ -63,7 +63,10 @@
   .win::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--line);transition:background .25s,box-shadow .25s}
   .win:hover,.win:focus-visible{background:rgba(35,40,55,.88);border-color:#3A4152;transform:translateX(2px);outline:none}
   .win:hover::before,.win:focus-visible::before{background:var(--amber);box-shadow:0 0 18px rgba(255,180,84,.5)}
-  .w-name{font-weight:600;font-size:16px}
+  .win.releases::before{background:var(--amber);box-shadow:0 0 10px rgba(255,180,84,.45)}
+    .win.releases .w-name b{color:var(--amber);font-weight:700}
+    .win.releases .w-hint{color:var(--amber)}
+    .w-name{font-weight:600;font-size:16px}
   .w-hint{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--fog);transition:color .25s}
   .win:hover .w-hint{color:var(--amber)}
   .player{margin-top:48px}
@@ -115,13 +118,12 @@
     <p class="eyebrow">Nitra · Slovakia</p>
     <h1>Danchi</h1>
     <p class="tagline">Electronic music for the late hours. <em>Folk melodies, modern grooves — house, garage, phonk and everything between.</em></p>
-    <p class="count"><b>65</b> releases and counting</p>
   </header>
   <nav class="links" aria-label="Listen and follow">
+    <a class="win releases" href="releases/"><span class="w-name"><b>65</b> releases and counting</span><span class="w-hint">Browse all &#8594;</span></a>
     <a class="win" href="https://open.spotify.com/artist/5FKtxmBPtW1OxBxa3AdkXo" target="_blank" rel="noopener"><span class="w-name">Spotify</span><span class="w-hint">Listen</span></a>
     <a class="win" href="https://www.youtube.com/channel/UCn19TQbANA8838DYnylaQCg" target="_blank" rel="noopener"><span class="w-name">YouTube</span><span class="w-hint">Watch</span></a>
     <a class="win" href="https://music.apple.com/artist/danchi/1554274941" target="_blank" rel="noopener"><span class="w-name">Apple Music</span><span class="w-hint">Listen</span></a>
-    <a class="win" href="releases/"><span class="w-name">Releases</span><span class="w-hint">65 singles</span></a>
     <a class="win" href="https://www.tiktok.com/@danchinitra" target="_blank" rel="noopener"><span class="w-name">TikTok</span><span class="w-hint">Follow</span></a>
     <a class="win" href="https://www.instagram.com/danchinitra/" target="_blank" rel="noopener"><span class="w-name">Instagram</span><span class="w-hint">Follow</span></a>
   </nav>
