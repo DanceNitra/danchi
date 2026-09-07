@@ -7,7 +7,7 @@ Refresh the catalogue after each Friday release:
   https://itunes.apple.com/lookup?id=1554274941&entity=song&limit=200  ->  data/catalog.json
 index.html is never touched.
 """
-import json, os, re, html, datetime, shutil
+import json, os, re, html, datetime, shutil, urllib.parse
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SITE = "https://dancenitra.github.io/danchi"
@@ -135,6 +135,7 @@ for i, s in enumerate(songs):
     prev_ = songs[i + 1] if i + 1 < len(songs) else None   # older
     next_ = songs[i - 1] if i > 0 else None                 # newer
     url = f"{SITE}/releases/{s['slug']}/"; img = art(s["artworkUrl100"], 1200)
+    q = urllib.parse.quote(f"DANCHI {s['trackName']}")
     title = f"{s['trackName']} — DANCHI"
     desc = f"{s['trackName']} by DANCHI, single released {pretty_date(s['date'])}. {dur(s['trackTimeMillis'])}, {s['primaryGenreName'].lower()}. Listen on Apple Music, Spotify and YouTube."
     ld = {"@context": "https://schema.org", "@graph": [group,
@@ -148,7 +149,7 @@ for i, s in enumerate(songs):
 <div class="rel"><img class="cover" src="{img}" width="1200" height="1200" alt="{html.escape(s['trackName'])} — DANCHI single cover">
 <div>
 <div class="player"><span class="w-hint">Tap to hear · 30 s</span><audio controls preload="none" src="{s['previewUrl']}"></audio></div>
-<div class="links"><a class="win" href="{ARTIST['spotify']}"><span class="w-name">Spotify</span><span class="w-hint">Listen</span></a><a class="win" href="{s['trackViewUrl'].split('?')[0]}"><span class="w-name">Apple Music</span><span class="w-hint">Listen</span></a><a class="win" href="{ARTIST['youtube']}"><span class="w-name">YouTube</span><span class="w-hint">Watch</span></a></div>
+<div class="links"><a class="win" href="{s["trackViewUrl"].split("&")[0]}"><span class="w-name">Apple Music</span><span class="w-hint">Play this track</span></a><a class="win" href="https://open.spotify.com/search/{q}/tracks"><span class="w-name">Spotify</span><span class="w-hint">Play this track</span></a><a class="win" href="{ARTIST['youtube']}/search?query={q}"><span class="w-name">YouTube</span><span class="w-hint">Watch this track</span></a><a class="win" href="https://song.link/i/{s['trackId']}"><span class="w-name">Everywhere else</span><span class="w-hint">Deezer, Tidal, Amazon &#8230;</span></a></div>
 {f'<div class="note">{html.escape(note)}</div>' if note else ''}
 </div></div>
 <div class="pn">{f'<a class="win" href="{SITE}/releases/{prev_["slug"]}/"><span class="w-name">{html.escape(prev_["trackName"])}</span><span class="w-hint">Older</span></a>' if prev_ else '<span></span>'}{f'<a class="win" href="{SITE}/releases/{next_["slug"]}/"><span class="w-name">{html.escape(next_["trackName"])}</span><span class="w-hint">Newer</span></a>' if next_ else '<span></span>'}</div>"""
