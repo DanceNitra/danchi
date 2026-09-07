@@ -54,49 +54,77 @@ assert len({s["slug"] for s in songs}) == len(songs), "duplicate slugs"
 
 CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=IBM+Plex+Mono:wght@400;500&display=swap');
-:root{--bg:#0A0E16;--panel:#14171F;--ink:#ECE9E2;--dim:#c9ccd6;--mute:#7c808c;--amber:#FFB454;--line:#1e2230}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:'Archivo',sans-serif;font-variation-settings:'wdth' 100;line-height:1.5;-webkit-font-smoothing:antialiased}
-a{color:var(--amber)}.mono{font-family:'IBM Plex Mono',monospace}
-.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
-header.top{border-bottom:1px solid var(--line)}header.top .wrap{display:flex;justify-content:space-between;align-items:center;height:60px}
-header.top a{color:var(--ink);text-decoration:none;font-weight:700;letter-spacing:.14em;font-variation-settings:'wdth' 75}
-header.top nav a{font-weight:400;letter-spacing:0;margin-left:22px;color:var(--dim);font-size:14px;font-variation-settings:'wdth' 100}
-.rel{display:grid;grid-template-columns:minmax(280px,480px) 1fr;gap:48px;padding:56px 0;align-items:start}
-@media(max-width:800px){.rel{grid-template-columns:1fr}}
-.cover{width:100%;aspect-ratio:1;display:block;border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,180,84,.08)}
-.k{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--mute);letter-spacing:.06em}
-h1{font-size:clamp(40px,6vw,72px);line-height:.95;margin:6px 0 18px;font-weight:800;font-variation-settings:'wdth' 68;letter-spacing:-.01em}
-.meta{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;font-size:15px;color:var(--dim);margin:22px 0}
-.meta b{font-weight:500;color:var(--mute);font-family:'IBM Plex Mono',monospace;font-size:12px;padding-top:3px}
-.btns{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0}
-.btn{display:inline-block;padding:12px 18px;border:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:15px;background:var(--panel)}
-.btn:hover{border-color:var(--amber)}.btn.p{background:var(--amber);color:#0A0E16;border-color:var(--amber);font-weight:700}
-audio{width:100%;margin-top:6px;filter:invert(1) hue-rotate(180deg) saturate(.6)}
-.note{border-left:3px solid var(--amber);padding:2px 0 2px 18px;color:var(--dim);max-width:60ch;margin:24px 0}
-.pn{display:flex;justify-content:space-between;gap:20px;border-top:1px solid var(--line);padding:22px 0 56px;font-size:15px}
-.pn a{text-decoration:none;color:var(--dim)}.pn a:hover{color:var(--amber)}.pn span{display:block;color:var(--mute);font-size:12px;font-family:'IBM Plex Mono',monospace}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:22px;padding:8px 0 64px}
-.card{text-decoration:none;color:var(--ink)}.card img{width:100%;aspect-ratio:1;display:block;border:1px solid var(--line)}
-.card:hover img{outline:1px solid var(--amber)}.card b{display:block;margin-top:10px;font-weight:600;font-size:15px}.card small{color:var(--mute);font-family:'IBM Plex Mono',monospace;font-size:12px}
-.year{margin:42px 0 12px;font-family:'IBM Plex Mono',monospace;color:var(--amber);font-size:13px;letter-spacing:.1em;border-bottom:1px solid var(--line);padding-bottom:8px}
-h2{font-size:clamp(34px,5vw,56px);font-weight:800;font-variation-settings:'wdth' 68;margin:56px 0 8px;line-height:1}
-.lede{color:var(--dim);max-width:62ch;margin:0 0 8px}
-footer{border-top:1px solid var(--line);padding:28px 0 60px;color:var(--mute);font-size:13px}footer a{color:var(--dim);text-decoration:none;margin-right:18px}
+:root{--dusk:#14171F;--panel:#1C2029;--line:#2B303C;--amber:#FFB454;--fog:#9BA0AD;--ink:#ECE9E2}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--dusk);color:var(--ink);font-family:'Archivo',sans-serif;line-height:1.5;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:var(--ink)}
+/* facade: every cover is a window; the current release is the one light still on */
+.facade{position:fixed;inset:0;z-index:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:2px;align-content:start;padding:2px;overflow:hidden}
+.facade img{width:100%;aspect-ratio:1;display:block;object-fit:cover;opacity:.16;filter:saturate(.5)}
+.facade img.lit{opacity:.85;filter:none;box-shadow:0 0 18px 6px rgba(255,180,84,.45),0 0 60px 20px rgba(255,180,84,.18);position:relative;z-index:1}
+.facade img.near{opacity:.30}
+.veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:rgba(20,23,31,.46)}
+.page{position:relative;z-index:2;max-width:980px;margin:0 auto;padding:36px 22px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:44px}
+.brand{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--amber);text-decoration:none}
+.top nav a{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--fog);text-decoration:none;margin-left:20px}
+.top nav a:hover{color:var(--ink)}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--amber);margin:0 0 14px}
+h1{font-variation-settings:'wdth' 122;font-weight:900;font-size:clamp(40px,9vw,76px);line-height:.9;text-transform:uppercase;margin:0;text-shadow:0 2px 14px rgba(13,15,22,.85)}
+.count{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--fog);margin-top:12px;text-transform:uppercase}.count b{color:var(--amber);font-weight:500}
+.rel{display:grid;grid-template-columns:minmax(240px,400px) 1fr;gap:40px;align-items:start;margin-top:36px}
+@media(max-width:760px){.rel{grid-template-columns:1fr}}
+.cover{width:100%;aspect-ratio:1;display:block;border:1px solid var(--line);box-shadow:0 30px 80px rgba(13,15,22,.85),0 0 40px rgba(255,180,84,.12)}
+.tagline{font-size:15.5px;font-weight:300;color:#c9ccd6;max-width:36ch;text-shadow:0 1px 8px rgba(13,15,22,.9);margin:0 0 6px}
+.tagline em{font-style:normal;color:var(--ink)}
+.links{margin-top:22px;display:grid;gap:10px}
+.win{position:relative;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:17px 18px 17px 20px;background:rgba(24,28,37,.62);border:1px solid var(--line);text-decoration:none;color:var(--ink);transition:background .25s,border-color .25s,transform .15s;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);text-shadow:0 1px 6px rgba(13,15,22,.8)}
+.win::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--line);transition:background .25s,box-shadow .25s}
+.win:hover,.win:focus-visible{background:rgba(35,40,55,.88);border-color:#3A4152;transform:translateX(2px);outline:none}
+.win:hover::before{background:var(--amber);box-shadow:0 0 12px rgba(255,180,84,.6)}
+.w-name{font-weight:600;font-size:16px}.w-hint{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--fog)}
+.player{margin-top:22px;background:rgba(24,28,37,.62);border:1px solid var(--line);padding:14px 18px;backdrop-filter:blur(4px)}
+.player .w-hint{display:block;margin-bottom:8px}
+audio{width:100%;height:34px;filter:invert(1) hue-rotate(180deg) saturate(.5) brightness(.9)}
+.note{border-left:3px solid var(--amber);padding:2px 0 2px 18px;color:#c9ccd6;font-weight:300;max-width:52ch;margin:24px 0 0;text-shadow:0 1px 8px rgba(13,15,22,.9)}
+.pn{display:flex;justify-content:space-between;gap:20px;margin-top:44px}
+.pn a{flex:1;max-width:48%}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:14px}
+.card{text-decoration:none;color:var(--ink);background:rgba(24,28,37,.62);border:1px solid var(--line);padding:8px;transition:border-color .25s,transform .15s;backdrop-filter:blur(4px)}
+.card:hover{border-color:var(--amber);transform:translateY(-2px)}
+.card img{width:100%;aspect-ratio:1;display:block}.card b{display:block;margin-top:9px;font-weight:600;font-size:14px}.card small{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--fog);text-transform:uppercase}
+.year{margin:34px 0 0;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--amber)}
+footer{margin-top:52px;display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7c8090}
+footer .dot{color:var(--amber)}footer a{color:#7c8090;text-decoration:none}
 """
 
-def head(title, desc, url, image, ld):
+def head(title, desc, url, image, ld, facade):
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(desc)}"><link rel="canonical" href="{url}">
 <meta property="og:type" content="music.song"><meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{html.escape(desc)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{image}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="1200"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="{SITE}/apple-touch-icon.png"><link rel="apple-touch-icon" href="{SITE}/apple-touch-icon.png">
 <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>
 <style>{CSS}</style></head><body>
-<header class="top"><div class="wrap"><a href="{SITE}/">DANCHI</a><nav><a href="{SITE}/releases/">Releases</a><a href="{ARTIST['spotify']}">Spotify</a><a href="{ARTIST['apple']}">Apple Music</a><a href="{ARTIST['youtube']}">YouTube</a></nav></div></header>"""
+<div class="facade" aria-hidden="true">{facade}</div><div class="veil"></div>
+<div class="page"><div class="top"><a class="brand" href="{SITE}/">Danchi</a><nav><a href="{SITE}/releases/">Releases</a><a href="{ARTIST['spotify']}">Spotify</a><a href="{ARTIST['apple']}">Apple Music</a><a href="{ARTIST['youtube']}">YouTube</a></nav></div>"""
 
-FOOT = f"""<footer><div class="wrap"><a href="{SITE}/">danchi</a><a href="{ARTIST['instagram']}">Instagram</a><a href="{ARTIST['tiktok']}">TikTok</a><span>Nitra, Slovakia · new music every Friday</span></div></footer></body></html>"""
+FOOT = f"""<footer><span><a href="{SITE}/">Danchi</a> · <a href="{ARTIST['instagram']}">Instagram</a> · <a href="{ARTIST['tiktok']}">TikTok</a></span><span><span class="dot">&#9679;</span>&nbsp;the light is still on</span></footer></div></body></html>"""
 
 group = {"@type": "MusicGroup", "@id": SITE + "/#artist", "name": "DANCHI", "url": SITE + "/", "foundingLocation": {"@type": "Place", "name": ARTIST["from"]},
          "sameAs": [ARTIST["spotify"], ARTIST["apple"], ARTIST["youtube"], ARTIST["instagram"], ARTIST["tiktok"]]}
+
+import random
+def facade_html(lit_slug=None):
+    tiles = songs[:]; random.Random(7).shuffle(tiles); tiles = (tiles * 3)[:180]
+    LIT = 58  # ~row 5, right of centre on a desktop grid: visible beside the cover, not under the title
+    if lit_slug:
+        j = next(i for i, t in enumerate(tiles) if t["slug"] == lit_slug)
+        tiles[LIT], tiles[j] = tiles[j], tiles[LIT]
+    out = []
+    for i, t in enumerate(tiles):
+        cls = ' class="lit"' if (lit_slug and i == LIT) else ""
+        out.append(f'<img src="{art(t["artworkUrl100"],100)}" alt="" loading="lazy" decoding="async"{cls}>')
+    return "".join(out)
 
 out_root = os.path.join(ROOT, "releases")
 shutil.rmtree(out_root, ignore_errors=True); os.makedirs(out_root)
@@ -113,17 +141,17 @@ for i, s in enumerate(songs):
          "sameAs": [s["trackViewUrl"].split("?")[0]], "audio": {"@type": "AudioObject", "contentUrl": s["previewUrl"], "encodingFormat": "audio/aac", "duration": "PT30S"}},
         {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "DANCHI", "item": SITE + "/"}, {"@type": "ListItem", "position": 2, "name": "Releases", "item": SITE + "/releases/"}, {"@type": "ListItem", "position": 3, "name": s["trackName"], "item": url}]}]}
     note = NOTES.get(s["slug"])
-    body = f"""<main class="wrap"><div class="rel">
-<img class="cover" src="{img}" width="1200" height="1200" alt="{html.escape(s['trackName'])} — DANCHI single cover" loading="eager">
-<div><div class="k">RELEASE {s['idx']:02d} OF {len(songs)} · SINGLE</div><h1>{html.escape(s['trackName'])}</h1>
-<div class="meta"><b>ARTIST</b><span>DANCHI · {ARTIST['from']}</span><b>RELEASED</b><span>{pretty_date(s['date'])}</span><b>LENGTH</b><span>{dur(s['trackTimeMillis'])}</span><b>GENRE</b><span>{html.escape(s['primaryGenreName'])}</span></div>
-<div class="k">30-SECOND PREVIEW</div><audio controls preload="none" src="{s['previewUrl']}"></audio>
-<div class="btns"><a class="btn p" href="{ARTIST['spotify']}">Spotify</a><a class="btn" href="{s['trackViewUrl'].split('?')[0]}">Apple Music</a><a class="btn" href="{ARTIST['youtube']}">YouTube</a></div>
+    body = f"""<p class="eyebrow">Nitra · Slovakia · Single</p><h1>{html.escape(s['trackName'])}</h1>
+<div class="count">Release <b>{s['idx']:02d}</b> of {len(songs)} · {pretty_date(s['date'])} · {dur(s['trackTimeMillis'])} · {html.escape(s['primaryGenreName'])}</div>
+<div class="rel"><img class="cover" src="{img}" width="1200" height="1200" alt="{html.escape(s['trackName'])} — DANCHI single cover">
+<div>
+<div class="player"><span class="w-hint">Tap to hear · 30 s</span><audio controls preload="none" src="{s['previewUrl']}"></audio></div>
+<div class="links"><a class="win" href="{ARTIST['spotify']}"><span class="w-name">Spotify</span><span class="w-hint">Listen</span></a><a class="win" href="{s['trackViewUrl'].split('?')[0]}"><span class="w-name">Apple Music</span><span class="w-hint">Listen</span></a><a class="win" href="{ARTIST['youtube']}"><span class="w-name">YouTube</span><span class="w-hint">Watch</span></a></div>
 {f'<div class="note">{html.escape(note)}</div>' if note else ''}
 </div></div>
-<div class="pn"><div>{f'<a href="{SITE}/releases/{prev_["slug"]}/"><span>OLDER</span>← {html.escape(prev_["trackName"])}</a>' if prev_ else ''}</div><div style="text-align:right">{f'<a href="{SITE}/releases/{next_["slug"]}/"><span>NEWER</span>{html.escape(next_["trackName"])} →</a>' if next_ else ''}</div></div></main>"""
+<div class="pn">{f'<a class="win" href="{SITE}/releases/{prev_["slug"]}/"><span class="w-name">{html.escape(prev_["trackName"])}</span><span class="w-hint">Older</span></a>' if prev_ else '<span></span>'}{f'<a class="win" href="{SITE}/releases/{next_["slug"]}/"><span class="w-name">{html.escape(next_["trackName"])}</span><span class="w-hint">Newer</span></a>' if next_ else '<span></span>'}</div>"""
     d = os.path.join(out_root, s["slug"]); os.makedirs(d)
-    open(os.path.join(d, "index.html"), "w").write(head(title, desc, url, img, ld) + body + FOOT)
+    open(os.path.join(d, "index.html"), "w").write(head(title, desc, url, img, ld, facade_html(s["slug"])) + body + FOOT)
     urls.append((url, s["date"]))
 
 # index
@@ -134,13 +162,13 @@ ld = {"@context": "https://schema.org", "@graph": [group, {"@type": "ItemList", 
       "itemListElement": [{"@type": "ListItem", "position": i + 1, "url": f"{SITE}/releases/{s['slug']}/", "name": s["trackName"]} for i, s in enumerate(songs)]}]}
 cards = ""
 for y in sorted(by_year, reverse=True):
-    cards += f'<div class="year">{y} · {len(by_year[y])} RELEASES</div><div class="grid">'
+    cards += f'<div class="year">{y} · {len(by_year[y])} releases</div><div class="grid">'
     for s in by_year[y]:
-        cards += f'<a class="card" href="{SITE}/releases/{s["slug"]}/"><img src="{art(s["artworkUrl100"],600)}" width="600" height="600" loading="lazy" alt="{html.escape(s["trackName"])} cover"><b>{html.escape(s["trackName"])}</b><small>{pretty_date(s["date"])}</small></a>'
+        cards += f'<a class="card" href="{SITE}/releases/{s["slug"]}/"><img src="{art(s["artworkUrl100"],400)}" width="400" height="400" loading="lazy" alt="{html.escape(s["trackName"])} cover"><b>{html.escape(s["trackName"])}</b><small>{pretty_date(s["date"])}</small></a>'
     cards += "</div>"
 first, last = songs[-1]["date"][:4], songs[0]["date"][:4]
-body = f"""<main class="wrap"><h2>Releases</h2><p class="lede">{len(songs)} singles by DANCHI, {first}–{last}, from {ARTIST['from']}. Every release has its own page with a 30-second preview and links to Apple Music, Spotify and YouTube.</p>{cards}</main>"""
-open(os.path.join(out_root, "index.html"), "w").write(head("Releases — DANCHI", f"All {len(songs)} DANCHI singles, {first}–{last}, with previews and streaming links.", idx_url, art(songs[0]["artworkUrl100"], 1200), ld) + body + FOOT)
+body = f"""<p class="eyebrow">Nitra · Slovakia</p><h1>Releases</h1><div class="count"><b>{len(songs)}</b> singles · {first}–{last} · new music every Friday</div>{cards}"""
+open(os.path.join(out_root, "index.html"), "w").write(head("Releases — DANCHI", f"All {len(songs)} DANCHI singles, {first}–{last}, each with a 30-second preview and Apple Music, Spotify and YouTube links.", idx_url, art(songs[0]["artworkUrl100"], 1200), ld, facade_html()) + body + FOOT)
 
 # sitemap (root stays first)
 today = datetime.date.today().isoformat()
