@@ -1,0 +1,4 @@
+{
+  "_readme": "Exact per-track links. Add an entry when you copy a Spotify or YouTube link anyway (e.g. on release day), then run: python build_releases.py. Anything missing falls back to a search that lands on the track.",
+  "_example": {"spotify": "https://open.spotify.com/track/XXXXXXXXXXXXXXXXXXXXXX", "youtube": "https://youtu.be/XXXXXXXXXXX"}
+}

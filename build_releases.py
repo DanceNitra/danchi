@@ -45,6 +45,9 @@ def pretty_date(d):
     return datetime.date.fromisoformat(d).strftime("%-d %B %Y")
 
 cat = json.load(open(os.path.join(ROOT, "data", "catalog.json")))
+# optional exact links, filled in over time: {"cesta-domov": {"spotify": "https://open.spotify.com/track/...", "youtube": "https://youtu.be/..."}}
+LINKS_PATH = os.path.join(ROOT, "data", "links.json")
+LINKS = json.load(open(LINKS_PATH)) if os.path.exists(LINKS_PATH) else {}
 songs = [x for x in cat["results"] if x.get("kind") == "song"]
 songs.sort(key=lambda x: x["releaseDate"], reverse=True)
 for i, s in enumerate(songs):
@@ -136,6 +139,11 @@ for i, s in enumerate(songs):
     next_ = songs[i - 1] if i > 0 else None                 # newer
     url = f"{SITE}/releases/{s['slug']}/"; img = art(s["artworkUrl100"], 1200)
     q = urllib.parse.quote(f"DANCHI {s['trackName']}")
+    ex = LINKS.get(s["slug"], {})
+    sp = ex.get("spotify") or f"https://open.spotify.com/search/{q}/tracks"
+    yt = ex.get("youtube") or f"{ARTIST['youtube']}/search?query={q}"
+    sp_hint = "Play this track" if ex.get("spotify") else "Find this track"
+    yt_hint = "Watch this track" if ex.get("youtube") else "Find this track"
     title = f"{s['trackName']} — DANCHI"
     desc = f"{s['trackName']} by DANCHI, single released {pretty_date(s['date'])}. {dur(s['trackTimeMillis'])}, {s['primaryGenreName'].lower()}. Listen on Apple Music, Spotify and YouTube."
     ld = {"@context": "https://schema.org", "@graph": [group,
@@ -149,7 +157,7 @@ for i, s in enumerate(songs):
 <div class="rel"><img class="cover" src="{img}" width="1200" height="1200" alt="{html.escape(s['trackName'])} — DANCHI single cover">
 <div>
 <div class="player"><span class="w-hint">Tap to hear · 30 s</span><audio controls preload="none" src="{s['previewUrl']}"></audio></div>
-<div class="links"><a class="win" href="{s["trackViewUrl"].split("&")[0]}"><span class="w-name">Apple Music</span><span class="w-hint">Play this track</span></a><a class="win" href="https://open.spotify.com/search/{q}/tracks"><span class="w-name">Spotify</span><span class="w-hint">Play this track</span></a><a class="win" href="{ARTIST['youtube']}/search?query={q}"><span class="w-name">YouTube</span><span class="w-hint">Watch this track</span></a><a class="win" href="https://song.link/i/{s['trackId']}"><span class="w-name">Everywhere else</span><span class="w-hint">Deezer, Tidal, Amazon &#8230;</span></a></div>
+<div class="links"><a class="win" href="{s["trackViewUrl"].split("&")[0]}"><span class="w-name">Apple Music</span><span class="w-hint">Play this track</span></a><a class="win" href="{sp}"><span class="w-name">Spotify</span><span class="w-hint">{sp_hint}</span></a><a class="win" href="{yt}"><span class="w-name">YouTube</span><span class="w-hint">{yt_hint}</span></a><a class="win" href="https://song.link/i/{s['trackId']}"><span class="w-name">Everywhere else</span><span class="w-hint">Deezer, Tidal, Amazon &#8230;</span></a></div>
 {f'<div class="note">{html.escape(note)}</div>' if note else ''}
 </div></div>
 <div class="pn">{f'<a class="win" href="{SITE}/releases/{prev_["slug"]}/"><span class="w-name">{html.escape(prev_["trackName"])}</span><span class="w-hint">Older</span></a>' if prev_ else '<span></span>'}{f'<a class="win" href="{SITE}/releases/{next_["slug"]}/"><span class="w-name">{html.escape(next_["trackName"])}</span><span class="w-hint">Newer</span></a>' if next_ else '<span></span>'}</div>"""
