@@ -261,5 +261,41 @@
   "chillout-on-the-route": {
     "spotify": "https://open.spotify.com/track/6IjSHuUikIlogIhydQRmip",
     "youtube": "https://www.youtube.com/watch?v=tj7P2lC0rPk"
+  },
+  "vespers": {
+    "spotify": "https://open.spotify.com/track/1UfePqfP7hdy7J1lubDBxp",
+    "youtube": "https://www.youtube.com/watch?v=uF2WXo_cJYk"
+  },
+  "slivovitz": {
+    "spotify": "https://open.spotify.com/track/0wK3jefzvzsFblDiZKuLwo",
+    "youtube": "https://www.youtube.com/watch?v=RnW3qqEA-JI"
+  },
+  "tavern-fm": {
+    "spotify": "https://open.spotify.com/track/3643FCBS0cAgAfGsAvvdzc",
+    "youtube": "https://www.youtube.com/watch?v=qvxIZGVsHSo"
+  },
+  "hijack": {
+    "spotify": "https://open.spotify.com/track/79xfGIITo9eJHFhOVDMMfj",
+    "youtube": "https://www.youtube.com/watch?v=WI_NH3_SYBQ"
+  },
+  "tape-hiss-disco": {
+    "spotify": "https://open.spotify.com/track/65hrukkLINFFWquHvLvkIQ",
+    "youtube": "https://www.youtube.com/watch?v=P4LyTuCuo-g"
+  },
+  "acetate": {
+    "spotify": "https://open.spotify.com/track/1AvqPcyXeqcOLjxmLQRZW5",
+    "youtube": "https://www.youtube.com/watch?v=LMBr0Yof-Kw"
+  },
+  "procession": {
+    "spotify": "https://open.spotify.com/track/7lk8v6jsnnPnVA3YBWgaNH",
+    "youtube": "https://www.youtube.com/watch?v=MlsiI0jczAA"
+  },
+  "last-tram": {
+    "spotify": "https://open.spotify.com/track/3tOFgF1qOTRAimeutChPGq",
+    "youtube": "https://www.youtube.com/watch?v=oeGRNkNnlpE"
+  },
+  "aj-jeden-lajk": {
+    "spotify": "https://open.spotify.com/track/3i9KegzJeD9IM6SBkhwYla",
+    "youtube": "https://www.youtube.com/watch?v=RFoxzPyafEc"
   }
 }

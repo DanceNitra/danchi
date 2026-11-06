@@ -42,7 +42,7 @@ def iso_dur(ms):
     return f"PT{s//60}M{s%60}S"
 
 def pretty_date(d):
-    return datetime.date.fromisoformat(d).strftime("%-d %B %Y")
+    return datetime.date.fromisoformat(d).strftime("%d %B %Y").lstrip("0")
 
 cat = json.load(open(os.path.join(ROOT, "data", "catalog.json")))
 # optional exact links, filled in over time: {"cesta-domov": {"spotify": "https://open.spotify.com/track/...", "youtube": "https://youtu.be/..."}}

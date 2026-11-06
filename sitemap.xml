@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>https://dancenitra.github.io/danchi/</loc><lastmod>2026-09-07</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
-<url><loc>https://dancenitra.github.io/danchi/releases/</loc><lastmod>2026-09-04</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+<url><loc>https://dancenitra.github.io/danchi/</loc><lastmod>2026-11-06</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+<url><loc>https://dancenitra.github.io/danchi/releases/</loc><lastmod>2026-11-06</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+<url><loc>https://dancenitra.github.io/danchi/releases/aj-jeden-lajk/</loc><lastmod>2026-11-06</lastmod><priority>0.7</priority></url>
+<url><loc>https://dancenitra.github.io/danchi/releases/last-tram/</loc><lastmod>2026-10-30</lastmod><priority>0.7</priority></url>
+<url><loc>https://dancenitra.github.io/danchi/releases/procession/</loc><lastmod>2026-10-23</lastmod><priority>0.7</priority></url>
+<url><loc>https://dancenitra.github.io/danchi/releases/acetate/</loc><lastmod>2026-10-16</lastmod><priority>0.7</priority></url>
+<url><loc>https://dancenitra.github.io/danchi/releases/tape-hiss-disco/</loc><lastmod>2026-10-09</lastmod><priority>0.7</priority></url>
+<url><loc>https://dancenitra.github.io/danchi/releases/hijack/</loc><lastmod>2026-10-02</lastmod><priority>0.7</priority></url>
+<url><loc>https://dancenitra.github.io/danchi/releases/tavern-fm/</loc><lastmod>2026-09-25</lastmod><priority>0.7</priority></url>
+<url><loc>https://dancenitra.github.io/danchi/releases/slivovitz/</loc><lastmod>2026-09-18</lastmod><priority>0.7</priority></url>
+<url><loc>https://dancenitra.github.io/danchi/releases/vespers/</loc><lastmod>2026-09-11</lastmod><priority>0.7</priority></url>
 <url><loc>https://dancenitra.github.io/danchi/releases/whistle-fm/</loc><lastmod>2026-09-04</lastmod><priority>0.7</priority></url>
 <url><loc>https://dancenitra.github.io/danchi/releases/narcotic/</loc><lastmod>2026-08-28</lastmod><priority>0.7</priority></url>
 <url><loc>https://dancenitra.github.io/danchi/releases/concrete-sorrow/</loc><lastmod>2026-08-21</lastmod><priority>0.7</priority></url>
